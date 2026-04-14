@@ -1,0 +1,34 @@
+{
+  "manifest_version": 2,
+  "name": "YT-Limit",
+  "version": "0.1",
+
+  "description": "Limit number of YouTube videos you can view per day",
+
+  "icons": {
+    "32": "icons/icon.svg",
+    "48": "icons/icon.svg",
+    "64": "icons/icon.svg"
+  },
+
+  "permissions": ["webNavigation", "storage", "tabs"],
+
+  "browser_action": {
+    "default_icon": "icons/icon.svg",
+    "default_title": "YT-Limit",
+    "default_popup": "popup/dialog.html"
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@yt-limit",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
+
+  "background": {
+    "scripts": ["background.js"]
+  }
+}

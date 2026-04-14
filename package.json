@@ -1,0 +1,15 @@
+{
+  "name": "yt-limit",
+  "version": "0.1.0",
+  "description": "Limit YouTube video views per day",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@types/firefox-webext-browser": "^143.0.0"
+  }
+}
