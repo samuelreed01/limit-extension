@@ -27,7 +27,10 @@
       }
     }
   },
-
+  "options_ui": {
+    "page": "dashboard/dashboard.html",
+    "open_in_tab": true
+  },
   "background": {
     "scripts": ["background.js"]
   }

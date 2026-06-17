@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Limiter Options</title>
+  </head>
+
+  <style>
+    table,
+    th,
+    td {
+      border: 1px solid black;
+      border-collapse: collapse;
+      padding: 0.3rem;
+    }
+
+    table {
+      margin-top: 1rem;
+    }
+  </style>
+  <body>
+    <h1>Limit Options</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Domain</th>
+          <th>Limit</th>
+          <th>Used today</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <div>
+        <label
+          >Add new domain
+          <input type="text" id="domain-input" />
+        </label>
+        <label
+          >Limit
+          <input type="number" id="limit-input" value="5" />
+        </label>
+        <button id="add-domain-button">Add domain</button>
+      </div>
+
+      <tbody id="domains-table"></tbody>
+    </table>
+
+    <script type="module" src="dashboard.js"></script>
+  </body>
+</html>

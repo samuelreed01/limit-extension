@@ -8,21 +8,33 @@
   <style>
     html,
     body {
-      width: 150px;
+      background-color: #eee;
+      border-radius: 1rem;
+    }
+
+    .updater {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    #footer {
+      padding-top: 0.5rem;
     }
   </style>
 
   <body>
     <div>
-      <h3>YT-Limit</h3>
-      <p>You have viewed <span class="total-span">0</span>/<span class="limit-span">5</span> videos today</p>
+      <h3>Site: <span class="domain-span"></span></h3>
+      <p>
+        You have viewed <span class="total-span">0</span>/<span class="limit-span">0</span> pages on this site today
+      </p>
 
-      <div>
-        <input type="number" id="limit-input" />
-        <button id="update-button">Update limit</button>
+      <div id="footer">
+        <button id="settings-button">Settings</button>
       </div>
     </div>
 
-    <script src="dialog.js"></script>
+    <script type="module" src="dialog.js"></script>
   </body>
 </html>
