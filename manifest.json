@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "YT-Limit",
+  "name": "Limit By Domain",
   "version": "0.1",
 
-  "description": "Limit number of YouTube videos you can view per day",
+  "description": "Limit the number of pages you can visit on each domain. Stop yourself opening endless YouTube videos or Reddit threads without blocking the whole site.",
 
   "icons": {
     "32": "icons/icon.svg",
@@ -21,7 +21,7 @@
 
   "browser_specific_settings": {
     "gecko": {
-      "id": "@yt-limit",
+      "id": "@limit-by-domain",
       "data_collection_permissions": {
         "required": ["none"]
       }
