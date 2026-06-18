@@ -1,6 +1,13 @@
 import { defaultLimit, formatDomain, limitDateKey, limitsByDomainKey, usageByDomainKey } from '../constants.js';
 
 window.addEventListener('load', async () => {
+  const settingsButton = document.getElementById('settings-button');
+  if (settingsButton) {
+    settingsButton.addEventListener('click', () => {
+      browser.runtime.openOptionsPage();
+    });
+  }
+
   const [tab] = await browser.tabs.query({
     active: true,
     currentWindow: true,
@@ -13,13 +20,6 @@ window.addEventListener('load', async () => {
   const domainSpan = document.querySelector('.domain-span');
   if (domainSpan) {
     domainSpan.textContent = domain;
-  }
-
-  const settingsButton = document.getElementById('settings-button');
-  if (settingsButton) {
-    settingsButton.addEventListener('click', () => {
-      browser.runtime.openOptionsPage();
-    });
   }
 
   const storage = await browser.storage.local.get();

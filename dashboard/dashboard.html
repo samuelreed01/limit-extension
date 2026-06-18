@@ -7,42 +7,62 @@
   </head>
 
   <style>
+    * {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
     table,
     th,
     td {
-      border: 1px solid black;
-      border-collapse: collapse;
       padding: 0.3rem;
+      border-collapse: collapse;
+    }
+
+    tbody tr:nth-child(odd) {
+      background-color: #eee;
+    }
+
+    .left-align {
+      text-align: left;
+    }
+
+    .button-wrapper {
+      display: flex;
+      gap: 0.5rem;
     }
 
     table {
       margin-top: 1rem;
+      /* border-radius: 1rem; */
+      background-color: #cce;
+      padding: 0 0.5rem;
+      width: 100%;
     }
   </style>
   <body>
     <h1>Limit Options</h1>
 
+    <div>
+      <label
+        >Add new domain
+        <input type="text" id="domain-input" />
+      </label>
+      <label
+        >Limit
+        <input type="number" id="limit-input" value="5" />
+      </label>
+      <button id="add-domain-button">Add domain</button>
+    </div>
+
     <table>
       <thead>
         <tr>
-          <th>Domain</th>
+          <th class="left-align">Domain</th>
           <th>Limit</th>
           <th>Used today</th>
           <th></th>
         </tr>
       </thead>
-
-      <div>
-        <label
-          >Add new domain
-          <input type="text" id="domain-input" />
-        </label>
-        <label
-          >Limit
-          <input type="number" id="limit-input" value="5" />
-        </label>
-        <button id="add-domain-button">Add domain</button>
-      </div>
 
       <tbody id="domains-table"></tbody>
     </table>

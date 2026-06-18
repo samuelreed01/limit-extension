@@ -39,11 +39,14 @@ async function buildTable() {
     const domainCell = document.createElement('td');
     domainCell.textContent = domain;
     const limitCell = document.createElement('td');
+    limitCell.style.textAlign = 'center';
     limitCell.textContent = limit.toString();
     const usedCell = document.createElement('td');
+    usedCell.style.textAlign = 'center';
     usedCell.textContent = usageByDomain[domain]?.length || 0;
 
     const removeCell = document.createElement('td');
+    removeCell.classList.add('button-wrapper');
     const removeButton = document.createElement('button');
     removeButton.textContent = 'Remove';
     removeButton.addEventListener('click', async () => {
