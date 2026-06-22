@@ -73,11 +73,6 @@ browser.storage.local.onChanged.addListener(async changes => {
 function shouldLimitPath(hostname, pathname) {
   if (!pathname || pathname === '/') return false;
 
-  // YouTube
-  if (hostname.startsWith('youtube') || hostname.startsWith('m.youtube')) {
-    if (!pathname.startsWith('/watch')) return false;
-  }
-
   // Reddit
   const isReddit = hostname.startsWith('reddit') || hostname.startsWith('old.reddit');
   if (isReddit && !pathname.includes('/comments')) return false;
