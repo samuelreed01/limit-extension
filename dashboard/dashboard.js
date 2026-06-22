@@ -50,7 +50,14 @@ async function buildTable() {
     const removeButton = document.createElement('button');
     removeButton.textContent = 'Remove';
     removeButton.addEventListener('click', async () => {
-      const { [limitsByDomainKey]: currentLimits } = await browser.storage.local.get(limitsByDomainKey);
+      const { [limitsByDomainKey]: currentLimits, [usageByDomainKey]: currentUsage } = await browser.storage.local.get({
+        limitsByDomainKey,
+        usageByDomainKey,
+      });
+      if (currentUsage[domain]?.length && currentUsage[domain].length === currentLimits[domain]) {
+        // todo: show warning
+        return;
+      }
       const newLimits = { ...currentLimits };
       delete newLimits[domain];
       browser.storage.local.set({ [limitsByDomainKey]: newLimits });
@@ -60,7 +67,14 @@ async function buildTable() {
     const resetButton = document.createElement('button');
     resetButton.textContent = 'Reset';
     resetButton.addEventListener('click', async () => {
-      const { [usageByDomainKey]: currentUsage } = await browser.storage.local.get(usageByDomainKey);
+      const { [limitsByDomainKey]: currentLimits, [usageByDomainKey]: currentUsage } = await browser.storage.local.get({
+        limitsByDomainKey,
+        usageByDomainKey,
+      });
+      if (currentUsage[domain]?.length && currentUsage[domain].length === currentLimits[domain]) {
+        // todo: show warning
+        return;
+      }
       const newUsage = { ...currentUsage };
       newUsage[domain] = [];
       browser.storage.local.set({ [usageByDomainKey]: newUsage });

@@ -17,3 +17,7 @@
 - custom redirect pages
 - allow overrides for legitimate usage (not idly browsing)
 - add option for syncing limits across devices
+- add overlay on page for viewed sites
+- migrate to v3
+- fix toolbar button page display
+- prevent increasing limit when limit already reached

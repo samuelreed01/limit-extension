@@ -7,10 +7,9 @@ const limitDateKey = 'limit-date';
 
 /** @param {{ url: string, tabId: number }} details */
 async function handleNavigation({ url, tabId }) {
-  const { pathname, hostname } = URL.parse(url) || {};
-  if (!hostname || !pathname || !shouldLimitPath(pathname)) return;
+  const { pathname, hostname } = parseUrl(url);
+  if (!hostname || !pathname || !shouldLimitPath(hostname, pathname)) return;
   const stored = await browser.storage.local.get();
-  const domain = formatDomain(hostname);
 
   /** @type {Record<string, number>} */
   const limitsByDomain = stored[limitsByDomainKey] || {};
@@ -19,12 +18,12 @@ async function handleNavigation({ url, tabId }) {
   /** @type {string} */
   const limitDate = stored[limitDateKey];
 
-  if (!limitsByDomain.hasOwnProperty(domain)) return;
+  if (!limitsByDomain.hasOwnProperty(hostname)) return;
 
-  const visitedUrls = usageByDomain[domain] || [];
+  const visitedUrls = usageByDomain[hostname] || [];
   if (visitedUrls.includes(pathname)) return;
 
-  const limit = limitsByDomain[domain] || defaultLimit;
+  const limit = limitsByDomain[hostname] || defaultLimit;
   browser.browserAction.setBadgeText({ text: (visitedUrls.length + 1).toString() + '/' + limit.toString(), tabId });
 
   if (visitedUrls.length >= Number(limit)) {
@@ -39,12 +38,12 @@ async function handleNavigation({ url, tabId }) {
   if (limitDate !== new Date().toDateString()) {
     await browser.storage.local.set({
       [limitDateKey]: new Date().toDateString(),
-      [usageByDomainKey]: { [domain]: [pathname] },
+      [usageByDomainKey]: { [hostname]: [pathname] },
     });
     return;
   }
 
-  const newUsage = { ...usageByDomain, [domain]: [...visitedUrls, pathname] };
+  const newUsage = { ...usageByDomain, [hostname]: [...visitedUrls, pathname] };
   await browser.storage.local.set({ [usageByDomainKey]: newUsage });
 }
 
@@ -67,15 +66,21 @@ browser.storage.local.onChanged.addListener(async changes => {
   }
 });
 
-/** @param {string} pathname */
-function shouldLimitPath(pathname) {
+/**
+ * @param {string} hostname
+ * @param {string} pathname
+ */
+function shouldLimitPath(hostname, pathname) {
   if (!pathname || pathname === '/') return false;
 
   // YouTube
-  if (pathname.startsWith('/watch')) return false;
+  if (hostname.startsWith('youtube') || hostname.startsWith('m.youtube')) {
+    if (!pathname.startsWith('/watch')) return false;
+  }
 
   // Reddit
-  if (pathname.startsWith('/r/') && !pathname.includes('/comments')) return false;
+  const isReddit = hostname.startsWith('reddit') || hostname.startsWith('old.reddit');
+  if (isReddit && !pathname.includes('/comments')) return false;
 
   return true;
 }
@@ -85,4 +90,23 @@ function formatDomain(domain) {
   let formatted = domain.replace('www.', '').replace('https://', '').replace('http://', '');
   if (formatted.endsWith('/')) formatted = formatted.slice(0, -1);
   return formatted;
+}
+
+/** @param {string} url */
+function parseUrl(url) {
+  let { pathname = '', hostname = '', search } = URL.parse(url) || {};
+  let formatted = hostname.replace('www.', '').replace('https://', '').replace('http://', '');
+  if (formatted.endsWith('/')) formatted = formatted.slice(0, -1);
+
+  // For YouTube can take different formats
+  // /watch?v=abc
+  // /watch/abc
+  // /v/abc
+  const isYouTube = formatted.startsWith('youtube') || formatted.startsWith('m.youtube');
+  if (isYouTube) {
+    const searchParams = new URLSearchParams(search);
+    if (searchParams.has('v')) pathname = `/watch?v=${searchParams.get('v')}`;
+  }
+
+  return { hostname, pathname };
 }

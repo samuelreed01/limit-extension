@@ -27,10 +27,13 @@ window.addEventListener('load', async () => {
   const limitUsed = storage[usageByDomainKey]?.[domain]?.length ?? 0;
   const limit = storage[limitsByDomainKey]?.[domain] ?? defaultLimit;
 
-  if (limitDate && limitUsed && limitDate === new Date().toDateString()) {
-    document.querySelector('.total-span').textContent = limitUsed;
+  const totalSpan = document.querySelector('.total-span');
+  const limitSpan = document.querySelector('.limit-span');
+
+  if (totalSpan && limitDate && limitUsed && limitDate === new Date().toDateString()) {
+    totalSpan.textContent = limitUsed;
   }
-  if (limit) {
-    document.querySelector('.limit-span').textContent = limit;
+  if (limitSpan && limit) {
+    limitSpan.textContent = limit;
   }
 });
