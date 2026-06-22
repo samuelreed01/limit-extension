@@ -95,14 +95,14 @@ function formatDomain(domain) {
 /** @param {string} url */
 function parseUrl(url) {
   let { pathname = '', hostname = '', search } = URL.parse(url) || {};
-  let formatted = hostname.replace('www.', '').replace('https://', '').replace('http://', '');
-  if (formatted.endsWith('/')) formatted = formatted.slice(0, -1);
+  hostname = hostname.replace('www.', '').replace('https://', '').replace('http://', '');
+  if (hostname.endsWith('/')) hostname = hostname.slice(0, -1);
 
   // For YouTube can take different formats
   // /watch?v=abc
   // /watch/abc
   // /v/abc
-  const isYouTube = formatted.startsWith('youtube') || formatted.startsWith('m.youtube');
+  const isYouTube = hostname.startsWith('youtube') || hostname.startsWith('m.youtube');
   if (isYouTube) {
     const searchParams = new URLSearchParams(search);
     if (searchParams.has('v')) pathname = `/watch?v=${searchParams.get('v')}`;
