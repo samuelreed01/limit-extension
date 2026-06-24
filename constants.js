@@ -14,3 +14,21 @@ export function formatDomain(domain) {
   if (formatted.endsWith('/')) formatted = formatted.slice(0, -1);
   return formatted;
 }
+
+const words = [
+  'llama',
+  'racoon',
+  'crocodile',
+  'tiger',
+  'anaconda',
+  'heron',
+  'cobra',
+  'hyrax',
+  'giraffe',
+  'elephant',
+  'hippo',
+  'rhinoceros',
+];
+export function getRandomWords(number = 4) {
+  return Array.from({ length: number }, () => words[Math.floor(Math.random() * words.length)]).join(' ');
+}

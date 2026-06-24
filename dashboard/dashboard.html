@@ -81,7 +81,21 @@
           Block Reddit homepage and subreddits only (allow opening specific threads)
         </label>
       </div>
+      <div>
+        <label>
+          <input type="checkbox" id="enable-lock"></input>
+          Enable self-control lock (makes you perform a tedious task before allowing usage increase)
+        </label>
+      </div>
     </div>
+
+    <dialog id="challenge-dialog" closedby="any">
+      <h3>To increase your limits, pass the following annoying test.</h3>
+      <p>Copy the following text exactly:</p>
+      <p id="challenge-text">Llama</p>
+      <input id="challenge-input" />
+      <button id="challenge-button">Enter</button>
+    </dialog>
 
     <script type="module" src="dashboard.js"></script>
   </body>

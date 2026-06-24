@@ -17,8 +17,12 @@ async function handleNavigation({ url, tabId }) {
 
   // Reddit-specific checks
   if (stored[blockAllRedditKey] && checkIsReddit(hostname)) return blockLoad(tabId);
-  if (stored[blockSubredditsKey] && checkIsBlockableReddit(hostname, pathname)) return blockLoad(tabId);
-  if (!shouldLimitPath(hostname, pathname)) return;
+  if (stored[blockSubredditsKey] && checkIsReddit(hostname) && !checkIsRedditThread(hostname, pathname)) {
+    return blockLoad(tabId);
+  }
+
+  // Don't block homepages
+  if (pathname === '/') return;
 
   /** @type {Record<string, number>} */
   const limitsByDomain = stored[limitsByDomainKey] || {};
@@ -76,8 +80,10 @@ browser.storage.local.onChanged.addListener(async changes => {
     const newFilter = { url: newDomains.map(domain => ({ hostContains: domain })) };
     browser.webNavigation.onCommitted.removeListener(handleNavigation);
     browser.webNavigation.onHistoryStateUpdated.removeListener(handleNavigation);
-    browser.webNavigation.onCommitted.addListener(handleNavigation, newFilter);
-    browser.webNavigation.onHistoryStateUpdated.addListener(handleNavigation, newFilter);
+    if (newDomains.length) {
+      browser.webNavigation.onCommitted.addListener(handleNavigation, newFilter);
+      browser.webNavigation.onHistoryStateUpdated.addListener(handleNavigation, newFilter);
+    }
   }
 });
 
@@ -89,18 +95,6 @@ function blockLoad(tabId) {
 
   // prevent page load
   return { cancel: true };
-}
-
-/**
- * @param {string} hostname
- * @param {string} pathname
- */
-function shouldLimitPath(hostname, pathname) {
-  if (!pathname || pathname === '/') return false;
-
-  if (!checkIsBlockableReddit(hostname, pathname)) return false;
-
-  return true;
 }
 
 /** @param {string} domain */
@@ -133,10 +127,10 @@ function parseUrl(url) {
  * @param {string} hostname
  * @param {string} pathname
  */
-function checkIsBlockableReddit(hostname, pathname) {
+function checkIsRedditThread(hostname, pathname) {
   const isReddit = checkIsReddit(hostname);
-  if (isReddit && pathname.includes('/comments')) return false;
-  return isReddit;
+  if (isReddit && pathname.includes('/comments')) return true;
+  return false;
 }
 
 /**

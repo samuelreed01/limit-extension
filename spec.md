@@ -16,6 +16,8 @@
 
 ## Future
 
+- dropdown shows different results when not on blocked site
+- self-control lock
 - custom redirect pages
 - allow overrides for legitimate usage (not idly browsing)
 - add option for syncing limits across devices

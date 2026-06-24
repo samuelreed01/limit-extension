@@ -2,6 +2,8 @@ import {
   blockAllRedditKey,
   blockSubredditsKey,
   defaultLimit,
+  enableLockKey,
+  getRandomWords,
   limitsByDomainKey,
   usageByDomainKey,
 } from '../constants.js';
@@ -57,11 +59,73 @@ window.addEventListener('load', async () => {
     });
   }
 
+  const enableLockCheckbox = document.getElementById('enable-lock');
+  if (enableLockCheckbox && enableLockCheckbox instanceof HTMLInputElement) {
+    enableLockCheckbox.checked = stored[enableLockKey];
+    enableLockCheckbox.addEventListener('change', async () => {
+      if (!enableLockCheckbox.checked) {
+        const passed = await completeChallenge();
+        if (!passed) {
+          enableLockCheckbox.checked = true;
+          return;
+        }
+      }
+
+      await browser.storage.local.set({ [enableLockKey]: enableLockCheckbox.checked });
+    });
+  }
+
   buildTable();
 });
 
+async function completeChallenge() {
+  const dialog = document.getElementById('challenge-dialog');
+  const input = document.getElementById('challenge-input');
+  const display = document.getElementById('challenge-text');
+  const button = document.getElementById('challenge-button');
+
+  if (
+    !dialog ||
+    !input ||
+    !display ||
+    !button ||
+    !(dialog instanceof HTMLDialogElement) ||
+    !(input instanceof HTMLInputElement)
+  ) {
+    return false;
+  }
+
+  const challengeText = getRandomWords(4);
+  display.innerText = challengeText;
+  dialog.showModal();
+  input.focus();
+
+  return /** @type {Promise<boolean>} */ (
+    new Promise(resolve => {
+      const checkAndResolve = () => {
+        if (input.value === challengeText) {
+          dialog.onclose = () => {};
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+        input.value = '';
+        dialog.close();
+      };
+
+      button.onclick = checkAndResolve;
+
+      input.onkeydown = e => {
+        if (e.key === 'Enter') checkAndResolve();
+      };
+
+      dialog.onclose = () => resolve(false);
+    })
+  );
+}
+
 async function buildTable() {
-  const storage = await browser.storage.local.get([limitsByDomainKey, usageByDomainKey]);
+  const storage = await browser.storage.local.get([limitsByDomainKey, usageByDomainKey, enableLockKey]);
   const limitsByDomain = storage[limitsByDomainKey] || {};
   const usageByDomain = storage[usageByDomainKey] || {};
 
@@ -89,8 +153,10 @@ async function buildTable() {
       const currentUsage = stored[usageByDomainKey];
       const currentLimits = stored[limitsByDomainKey];
       if (currentUsage?.[domain]?.length && currentUsage[domain].length === currentLimits[domain]) {
-        // todo: show warning
-        return;
+        if (storage[enableLockKey]) {
+          const passed = await completeChallenge();
+          if (!passed) return;
+        }
       }
       const newLimits = { ...currentLimits };
       delete newLimits[domain];
@@ -105,8 +171,10 @@ async function buildTable() {
       const currentUsage = stored[usageByDomainKey];
       const currentLimits = stored[limitsByDomainKey];
       if (currentUsage?.[domain]?.length && currentUsage[domain].length === currentLimits[domain]) {
-        // todo: show warning
-        return;
+        if (storage[enableLockKey]) {
+          const passed = await completeChallenge();
+          if (!passed) return;
+        }
       }
       const newUsage = { ...currentUsage };
       newUsage[domain] = [];
