@@ -1,4 +1,10 @@
-import { defaultLimit, limitsByDomainKey, usageByDomainKey } from '../constants.js';
+import {
+  blockAllRedditKey,
+  blockSubredditsKey,
+  defaultLimit,
+  limitsByDomainKey,
+  usageByDomainKey,
+} from '../constants.js';
 
 window.addEventListener('load', async () => {
   const addButton = document.getElementById('add-domain-button');
@@ -19,6 +25,35 @@ window.addEventListener('load', async () => {
       const limitInput = document.getElementById('limit-input');
       if (domainInput && domainInput instanceof HTMLInputElement) domainInput.value = '';
       if (limitInput && limitInput instanceof HTMLInputElement) limitInput.value = defaultLimit.toString();
+    });
+  }
+
+  const stored = await browser.storage.local.get();
+
+  const blockRedditCheckbox = document.getElementById('block-all-reddit');
+  const blockSubredditsCheckbox = document.getElementById('block-subreddits');
+  if (
+    blockRedditCheckbox &&
+    blockRedditCheckbox instanceof HTMLInputElement &&
+    blockSubredditsCheckbox &&
+    blockSubredditsCheckbox instanceof HTMLInputElement
+  ) {
+    blockRedditCheckbox.checked = stored[blockAllRedditKey];
+    blockRedditCheckbox.addEventListener('change', async () => {
+      blockSubredditsCheckbox.checked = false;
+      await browser.storage.local.set({
+        [blockAllRedditKey]: blockRedditCheckbox.checked,
+        [blockSubredditsKey]: false,
+      });
+    });
+
+    blockSubredditsCheckbox.checked = stored[blockSubredditsKey];
+    blockSubredditsCheckbox.addEventListener('change', async () => {
+      blockRedditCheckbox.checked = false;
+      await browser.storage.local.set({
+        [blockSubredditsKey]: blockSubredditsCheckbox.checked,
+        [blockAllRedditKey]: false,
+      });
     });
   }
 

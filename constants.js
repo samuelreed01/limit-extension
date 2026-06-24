@@ -3,6 +3,10 @@ export const limitedDomainsKey = 'limited-domains';
 export const limitsByDomainKey = 'limits-by-domain';
 export const usageByDomainKey = 'usage-by-domain';
 export const limitDateKey = 'limit-date';
+export const blockSubredditsKey = 'block-subreddits';
+export const blockAllRedditKey = 'block-all-reddit';
+export const enableLockKey = 'enable-lock';
+export const showOverlayKey = 'show-overlay';
 
 /** @param {string} domain */
 export function formatDomain(domain) {

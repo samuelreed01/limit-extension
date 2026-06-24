@@ -1,6 +1,6 @@
 # Tool to limit browsing
 
-## Specification
+## Done
 
 - add or remove domains to limit list
 - configure limits per-domain
@@ -11,6 +11,8 @@
 - when on a site in the limit list, display number on icon
 - add settings page to configure sites
 - add link to settings page in toolbar UI
+- fix toolbar button page display
+- prevent increasing limit when limit already reached
 
 ## Future
 
@@ -19,5 +21,3 @@
 - add option for syncing limits across devices
 - add overlay on page for viewed sites
 - migrate to v3
-- fix toolbar button page display
-- prevent increasing limit when limit already reached
