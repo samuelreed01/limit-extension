@@ -30,9 +30,16 @@
   <body>
     <div>
       <h3>Site: <span class="domain-span"></span></h3>
-      <p>
-        You have viewed <span class="total-span">0</span>/<span class="limit-span">0</span> pages on this site today
-      </p>
+
+      <div id="site-specific-data" style="display: none">
+        <p>
+          You have viewed <span class="total-span">0</span>/<span class="limit-span">0</span> pages on this site today
+        </p>
+      </div>
+
+      <div id="general-data">
+        <p>To add this site to your limit list, open the settings page</p>
+      </div>
 
       <div id="footer">
         <button id="settings-button">Settings</button>
