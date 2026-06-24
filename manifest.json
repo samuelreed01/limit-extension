@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Limit By Domain",
-  "version": "0.1",
+  "version": "0.3",
 
   "description": "Limit the number of pages you can visit on each domain. Stop yourself opening endless YouTube videos or Reddit threads without blocking the whole site.",
 
@@ -15,7 +15,7 @@
 
   "browser_action": {
     "default_icon": "icons/icon.svg",
-    "default_title": "YT-Limit",
+    "default_title": "Limit by Domain",
     "default_popup": "popup/dialog.html"
   },
 
